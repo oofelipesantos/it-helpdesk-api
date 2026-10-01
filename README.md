@@ -2,6 +2,8 @@
 
 API REST para gerenciamento de chamados de TI, desenvolvida para a disciplina de Desenvolvimento Back-End.
 
+O sistema tem como objetivo centralizar o gerenciamento de chamados de suporte de TI, permitindo cadastrar usuários e acompanhar os chamados relacionados a cada usuário
+
 O sistema permite cadastrar usuários e gerenciar chamados de suporte relacionados a esses usuários, utilizando uma API REST com persistência de dados em PostgreSQL através do Supabase.
 
 ## 👥 Integrantes
@@ -174,6 +176,33 @@ tickets
 ```
 
 O relacionamento entre elas é feito pela chave estrangeira `tickets.user_id`, que referencia `users.id`.
+
+Estrutura das tabelas utilizada no Supabase/PostgreSQL:
+
+```
+create table users (
+    id uuid primary key default gen_random_uuid(),
+    name varchar(100) not null,
+    email varchar(150) not null unique,
+    department varchar(100) not null
+);
+
+
+create table tickets (
+    id uuid primary key default gen_random_uuid(),
+    title varchar(150) not null,
+    description text not null,
+    priority varchar(20) not null,
+    status varchar(20) not null,
+    user_id uuid not null,
+    created_at timestamp with time zone default now(),
+
+    constraint fk_ticket_user
+        foreign key (user_id)
+        references users(id)
+        on delete cascade
+);
+```
 
 ## ▶️ Executando o projeto
 
